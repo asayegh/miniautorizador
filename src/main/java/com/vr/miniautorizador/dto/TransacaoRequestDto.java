@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 
 @Getter
@@ -11,8 +13,12 @@ import java.math.BigDecimal;
 @Data
 public class TransacaoRequestDto {
 
+    @Pattern(regexp = "^\\d{16}$")
     private String numeroCartao;
-    private String senhaCartao;
-    private BigDecimal valor;
 
+    @Pattern(regexp = "^\\d{4}$")
+    private String senhaCartao;
+
+    @DecimalMin(value = "0.01")
+    private BigDecimal valor;
 }
