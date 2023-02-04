@@ -2,12 +2,14 @@ package com.vr.miniautorizador.service;
 
 import com.vr.miniautorizador.dto.TransacaoRequestDto;
 import com.vr.miniautorizador.dto.TransacaoResponseDto;
+import com.vr.miniautorizador.model.Cartao;
 import com.vr.miniautorizador.model.Transacao;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import com.vr.miniautorizador.repository.TransacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -19,6 +21,27 @@ public class TransacaoService {
     @Autowired
     CartaoRepository cartaoRepository;
 
+    private static String throwException() {
+        throw new RuntimeException("As strings são diferentes");
+    }
+
+    private String salvarDados(Optional<BigDecimal> valorTransacao, Optional<Cartao> cartao) {
+
+        var transacaoResponse = new TransacaoResponseDto();
+        transacaoResponse.setValorTransacao(valorTransacao.get());
+
+        var transacao = new Transacao();
+        transacao.setCartao(cartao.get());
+        transacao.setValorTransacao(valorTransacao.get());
+
+        cartao.get().setSaldo(cartao.get().getSaldo().subtract(valorTransacao.get()));
+
+        cartaoRepository.save(cartao.get());
+        transacaoRepository.save(transacao);
+
+        return ("OK");
+    }
+
     public String criarTransacao(TransacaoRequestDto transacaoRequestDto) {
 
         var numeroCartao = Optional.of(transacaoRequestDto.getNumeroCartao());
@@ -28,28 +51,14 @@ public class TransacaoService {
         var cartao = cartaoRepository.findByNumeroCartao(numeroCartao.get());
         cartao.orElseThrow(() -> new RuntimeException("Cartão inexistente"));
 
-        if (!senhaCartao.get().equals(cartao.get().getSenha()))
-            throw new RuntimeException("Senha inválida");
+        String result = senhaCartao.get().equals(cartao.get().getSenha()) ? "OK" : throwException();
 
         var saldo = cartao.get().getSaldo();
 
-        if (saldo.compareTo(valorTransacao.get()) == 1) {
+        result = (saldo.compareTo(valorTransacao.get()) == 1) ?
+                salvarDados(valorTransacao, cartao) :
+                throwException();
 
-            var transacaoResponse = new TransacaoResponseDto();
-            transacaoResponse.setValorTransacao(valorTransacao.get());
-
-            var transacao = new Transacao();
-            transacao.setCartao(cartao.get());
-            transacao.setValorTransacao(valorTransacao.get());
-
-            cartao.get().setSaldo(cartao.get().getSaldo().subtract(valorTransacao.get()));
-
-            cartaoRepository.save(cartao.get());
-            transacaoRepository.save(transacao);
-
-        } else
-            throw new RuntimeException("Saldo insuficiente");
-
-        return "OK";
+        return result;
     }
 }
