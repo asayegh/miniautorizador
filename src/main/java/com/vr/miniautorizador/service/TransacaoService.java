@@ -2,14 +2,15 @@ package com.vr.miniautorizador.service;
 
 import com.vr.miniautorizador.dto.TransacaoRequestDto;
 import com.vr.miniautorizador.dto.TransacaoResponseDto;
-import com.vr.miniautorizador.model.Cartao;
 import com.vr.miniautorizador.model.Transacao;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import com.vr.miniautorizador.repository.TransacaoRepository;
+import com.vr.miniautorizador.strategy.Strategy;
+import com.vr.miniautorizador.strategy.StrategyConditionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -21,44 +22,57 @@ public class TransacaoService {
     @Autowired
     CartaoRepository cartaoRepository;
 
-    private static String throwException() {
-        throw new RuntimeException("As strings são diferentes");
+    @Value("${messages.saldoInsuficiente}")
+    private static String SALDO_INSUFICIENTE;
+    @Value("${messages.senhaIncorreta}")
+    private static String SENHA_INCORRETA;
+    @Value("${messages.cartaoInexistente}")
+    private static String CARTAO_INEXISTENTE;
+    @Value("${messages.ok}")
+    private static String OK;
+
+
+    private final StrategyConditionFactory strategyConditionFactory = new StrategyConditionFactory();
+
+    public void decide(String someCondition) {
+        Strategy strategy = strategyConditionFactory.getStrategy(someCondition)
+                .orElseThrow(() -> new IllegalArgumentException("Wrong condition"));
+        strategy.apply();
     }
 
-    private String salvarDados(Optional<BigDecimal> valorTransacao, Optional<Cartao> cartao) {
-
-        var transacaoResponse = new TransacaoResponseDto();
-        transacaoResponse.setValorTransacao(valorTransacao.get());
-
-        var transacao = new Transacao();
-        transacao.setCartao(cartao.get());
-        transacao.setValorTransacao(valorTransacao.get());
-
-        cartao.get().setSaldo(cartao.get().getSaldo().subtract(valorTransacao.get()));
-
-        cartaoRepository.save(cartao.get());
-        transacaoRepository.save(transacao);
-
-        return ("OK");
+    private static boolean throwException(String message) {
+        throw new RuntimeException(message);
     }
 
     public String criarTransacao(TransacaoRequestDto transacaoRequestDto) {
 
         var numeroCartao = Optional.of(transacaoRequestDto.getNumeroCartao());
         var senhaCartao = Optional.of(transacaoRequestDto.getSenhaCartao());
-        var valorTransacao = Optional.of(transacaoRequestDto.getValor());
+        var valorTransacaoRequest = Optional.of(transacaoRequestDto.getValor());
 
         var cartao = cartaoRepository.findByNumeroCartao(numeroCartao.get());
-        cartao.orElseThrow(() -> new RuntimeException("Cartão inexistente"));
+        cartao.orElseThrow(() -> new RuntimeException(CARTAO_INEXISTENTE));
 
-        String result = senhaCartao.get().equals(cartao.get().getSenha()) ? "OK" : throwException();
+        var comparaSenha = senhaCartao.get().equals(cartao.get().getSenha()) ? OK : SENHA_INCORRETA;
+        decide(comparaSenha);
 
         var saldo = cartao.get().getSaldo();
 
-        result = (saldo.compareTo(valorTransacao.get()) == 1) ?
-                salvarDados(valorTransacao, cartao) :
-                throwException();
+        var comparaSaldo = saldo.compareTo(valorTransacaoRequest.get()) == 1 ? OK : SALDO_INSUFICIENTE;
+        decide(comparaSaldo);
 
-        return result;
+        var transacaoResponse = new TransacaoResponseDto();
+        transacaoResponse.setValorTransacao(valorTransacaoRequest.get());
+
+        var transacao = new Transacao();
+        transacao.setCartao(cartao.get());
+        transacao.setValorTransacao(valorTransacaoRequest.get());
+
+        cartao.get().setSaldo(cartao.get().getSaldo().subtract(valorTransacaoRequest.get()));
+
+        cartaoRepository.save(cartao.get());
+        transacaoRepository.save(transacao);
+
+        return OK;
     }
 }
