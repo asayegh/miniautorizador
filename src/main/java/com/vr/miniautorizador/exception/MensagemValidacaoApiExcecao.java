@@ -9,19 +9,19 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ApiErrorMessage {
+public class MensagemValidacaoApiExcecao {
 
     private HttpStatus status;
     private List<String> erros;
 
-    public ApiErrorMessage(HttpStatus status, List<String> errors) {
+    public MensagemValidacaoApiExcecao(HttpStatus status, List<String> errors) {
 
         super();
         this.status = status;
         this.erros = errors;
     }
 
-    public ApiErrorMessage(HttpStatus status, String erro) {
+    public MensagemValidacaoApiExcecao(HttpStatus status, String erro) {
 
         super();
         this.status = status;

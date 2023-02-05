@@ -1,13 +1,12 @@
 package com.vr.miniautorizador.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vr.miniautorizador.dto.CartaoDto;
+import com.vr.miniautorizador.dto.CartaoRequestDto;
 import com.vr.miniautorizador.dto.CartaoResponseDto;
-import com.vr.miniautorizador.exception.CustomValidationException;
-import com.vr.miniautorizador.jackson.Views;
+import com.vr.miniautorizador.exception.ResourceNotFoundException;
+import com.vr.miniautorizador.exception.ValidacaoCriarCartao;
 import com.vr.miniautorizador.model.Cartao;
 import com.vr.miniautorizador.repository.CartaoRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,27 +20,24 @@ public class CartaoService {
     @Autowired
     CartaoRepository cartaoRepository;
 
-    public CartaoDto criarCartao(CartaoDto cartaoDto) {
+    public CartaoResponseDto criarCartao(CartaoRequestDto cartaoRequestDto) {
 
-        var objectMapper = new ObjectMapper();
-        objectMapper.setConfig(objectMapper.getSerializationConfig()
-                .withView(Views.class));
-        var request = objectMapper.convertValue(cartaoDto, new TypeReference<Cartao>() {});
+        var mapper = new ModelMapper();
+
         var cartao = new Cartao();
+        var request = mapper.map(cartaoRequestDto, Cartao.class);
 
         try {
             cartao = cartaoRepository.save(request);
         } catch(Exception e){
             var cartaoResponseDto = CartaoResponseDto.builder()
-                    .numeroCartao(cartaoDto.getNumeroCartao())
-                    .senha(cartaoDto.getSenha())
+                    .numeroCartao(cartaoRequestDto.getNumeroCartao())
+                    .senha(cartaoRequestDto.getSenha())
                     .build();
-            throw new CustomValidationException(cartaoResponseDto);
+            throw new ValidacaoCriarCartao(cartaoResponseDto);
         }
 
-        var response = objectMapper.convertValue(cartao, new TypeReference<CartaoDto>() {
-        });
-
+        var response = mapper.map(cartao, CartaoResponseDto.class);
         return response;
 
     }
@@ -49,9 +45,8 @@ public class CartaoService {
     public BigDecimal buscaCartaoPorNumero(String numeroCartao) {
 
         Optional<Cartao> cartao = cartaoRepository.findByNumeroCartao(numeroCartao);
-
-        return Optional.ofNullable(cartao.get().getSaldo())
-                .orElseThrow(() -> new RuntimeException());
+        cartao.orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+        return cartao.get().getSaldo();
     }
 
 }

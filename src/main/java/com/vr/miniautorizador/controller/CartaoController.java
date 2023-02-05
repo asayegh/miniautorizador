@@ -1,8 +1,8 @@
 package com.vr.miniautorizador.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.vr.miniautorizador.dto.CartaoDto;
-import com.vr.miniautorizador.jackson.Views;
+import com.vr.miniautorizador.dto.CartaoRequestDto;
+import com.vr.miniautorizador.dto.CartaoResponseDto;
 import com.vr.miniautorizador.service.CartaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,14 +24,12 @@ public class CartaoController {
     private CartaoService service;
 
     @PostMapping
-    @JsonView(Views.Create.class)
-    public ResponseEntity<CartaoDto> criarCartao(@RequestBody @Valid CartaoDto cartaoDto) {
-        return new ResponseEntity<>(service.criarCartao(cartaoDto),
+    public ResponseEntity<CartaoResponseDto> criarCartao(@RequestBody @Valid CartaoRequestDto cartaoRequestDto) {
+        return new ResponseEntity<>(service.criarCartao(cartaoRequestDto),
                 HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/{numeroCartao}")
-    @JsonView(Views.Create.class)
     public ResponseEntity<BigDecimal> obterCartao(@NotNull @PathVariable @Pattern(regexp = "^\\d{16}$")
                                                   String numeroCartao) {
         return new ResponseEntity<>(service.buscaCartaoPorNumero(numeroCartao), HttpStatus.OK);
