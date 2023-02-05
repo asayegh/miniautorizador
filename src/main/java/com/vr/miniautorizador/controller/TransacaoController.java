@@ -2,6 +2,7 @@ package com.vr.miniautorizador.controller;
 
 import com.vr.miniautorizador.dto.TransacaoRequestDto;
 import com.vr.miniautorizador.service.TransacaoService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class TransacaoController {
     @Autowired
     private TransacaoService service;
 
+    @ApiOperation(value = "Executa uma transaçao financeira")
     @PostMapping
     public ResponseEntity<String> criarTransacao(@RequestBody @Valid TransacaoRequestDto transacaoDto) {
        return new ResponseEntity<>(service.criarTransacao(transacaoDto),
