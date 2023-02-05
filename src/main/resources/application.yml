@@ -28,9 +28,3 @@ spring:
     senhaIncorreta: Senha incorreta!
     cartaoInvalido: Cartão inexistente!
     ok: OK
-
-  constants:
-    senhaCorreta: SENHA_CORRETA
-    senhaIncorreta: SENHA_INCORRETA
-    saldoSuficiente: SALDO_SUFICIENTE
-    saldoInsuficiente: SALDO_INSUFICIENTE

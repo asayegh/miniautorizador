@@ -1,14 +1,13 @@
 package com.vr.miniautorizador.strategy;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.vr.miniautorizador.exception.ErroCustomizadoTransacao;
+
+import static com.vr.miniautorizador.util.Constants.SENHA_INVALIDA;
 
 public class SenhaIncorretaStrategy implements Strategy {
 
-    private static String SENHA_INCORRETA;
-    @Value("${constants.cartaoInexistente}")
-
     @Override
     public void apply() {
-        //throw new CustomException();
+        throw new ErroCustomizadoTransacao(SENHA_INVALIDA);
     }
 }

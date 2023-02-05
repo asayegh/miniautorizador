@@ -45,7 +45,9 @@ public class CartaoService {
     public BigDecimal buscaCartaoPorNumero(String numeroCartao) {
 
         Optional<Cartao> cartao = cartaoRepository.findByNumeroCartao(numeroCartao);
-        cartao.orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+        cartao.orElseThrow(
+                () -> new ResourceNotFoundException("Recurso não encontrado")
+        );
         return cartao.get().getSaldo();
     }
 

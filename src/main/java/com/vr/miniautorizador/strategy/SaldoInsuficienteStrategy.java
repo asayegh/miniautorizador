@@ -1,14 +1,13 @@
 package com.vr.miniautorizador.strategy;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.vr.miniautorizador.exception.ErroCustomizadoTransacao;
+
+import static com.vr.miniautorizador.util.Constants.SALDO_INSUFICIENTE;
 
 public class SaldoInsuficienteStrategy implements Strategy {
 
-    @Value("${constants.saldoInsuficiente}")
-    private static String SALDO_INSUFICIENTE;
-
     @Override
     public void apply() {
-        //throw new CustomException();
+        throw new ErroCustomizadoTransacao(SALDO_INSUFICIENTE);
     }
 }
