@@ -3,6 +3,8 @@ package com.vr.miniautorizador.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vr.miniautorizador.dto.CartaoDto;
+import com.vr.miniautorizador.dto.CartaoResponseDto;
+import com.vr.miniautorizador.exception.CustomValidationException;
 import com.vr.miniautorizador.jackson.Views;
 import com.vr.miniautorizador.model.Cartao;
 import com.vr.miniautorizador.repository.CartaoRepository;
@@ -22,19 +24,29 @@ public class CartaoService {
     public CartaoDto criarCartao(CartaoDto cartaoDto) {
 
         var objectMapper = new ObjectMapper();
-        var request = objectMapper.convertValue(cartaoDto, new TypeReference<Cartao>(){});
-        var cartao = cartaoRepository.save(request);
-
         objectMapper.setConfig(objectMapper.getSerializationConfig()
                 .withView(Views.class));
+        var request = objectMapper.convertValue(cartaoDto, new TypeReference<Cartao>() {});
+        var cartao = new Cartao();
 
-        var response = objectMapper.convertValue(cartao, new TypeReference<CartaoDto>() {});
+        try {
+            cartao = cartaoRepository.save(request);
+        } catch(Exception e){
+            var cartaoResponseDto = CartaoResponseDto.builder()
+                    .numeroCartao(cartaoDto.getNumeroCartao())
+                    .senha(cartaoDto.getSenha())
+                    .build();
+            throw new CustomValidationException(cartaoResponseDto);
+        }
+
+        var response = objectMapper.convertValue(cartao, new TypeReference<CartaoDto>() {
+        });
 
         return response;
 
     }
 
-    public BigDecimal buscaCartaoPorNumero(String numeroCartao ) {
+    public BigDecimal buscaCartaoPorNumero(String numeroCartao) {
 
         Optional<Cartao> cartao = cartaoRepository.findByNumeroCartao(numeroCartao);
 

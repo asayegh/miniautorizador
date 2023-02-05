@@ -13,12 +13,12 @@ import java.math.BigDecimal;
 @Data
 public class TransacaoRequestDto {
 
-    @Pattern(regexp = "^\\d{16}$")
+    @Pattern(regexp = "^\\d{16}$", message = "Número de cartão inválido")
     private String numeroCartao;
 
-    @Pattern(regexp = "^\\d{4}$")
+    @Pattern(regexp = "^\\d{4}$", message = "Senha inválida")
     private String senhaCartao;
 
-    @DecimalMin(value = "0.01")
+    @DecimalMin(value = "0.01", message = "O valor da transação precisa ser igual ou maior que 1 centavo")
     private BigDecimal valor;
 }

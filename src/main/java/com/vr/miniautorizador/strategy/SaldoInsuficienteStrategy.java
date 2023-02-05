@@ -9,6 +9,6 @@ public class SaldoInsuficienteStrategy implements Strategy {
 
     @Override
     public void apply() {
-        throw new RuntimeException(SALDO_INSUFICIENTE);
+        //throw new CustomException();
     }
 }

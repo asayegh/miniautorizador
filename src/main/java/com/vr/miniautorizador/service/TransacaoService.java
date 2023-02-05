@@ -16,20 +16,20 @@ import java.util.Optional;
 @Service
 public class TransacaoService {
 
+    @Value("${spring.messages.saldoInsuficiente}")
+    private String SALDO_INSUFICIENTE;
+    @Value("${spring.messages.senhaIncorreta}")
+    private String SENHA_INCORRETA;
+    @Value("${spring.messages.cartaoInvalido}")
+    private String CARTAO_INEXISTENTE;
+    @Value("${spring.messages.ok}")
+    private String OK;
+
     @Autowired
     TransacaoRepository transacaoRepository;
 
     @Autowired
     CartaoRepository cartaoRepository;
-
-    @Value("${messages.saldoInsuficiente}")
-    private static String SALDO_INSUFICIENTE;
-    @Value("${messages.senhaIncorreta}")
-    private static String SENHA_INCORRETA;
-    @Value("${messages.cartaoInexistente}")
-    private static String CARTAO_INEXISTENTE;
-    @Value("${messages.ok}")
-    private static String OK;
 
 
     private final StrategyConditionFactory strategyConditionFactory = new StrategyConditionFactory();

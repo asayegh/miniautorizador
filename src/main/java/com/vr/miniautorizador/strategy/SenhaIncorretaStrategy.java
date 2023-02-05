@@ -9,6 +9,6 @@ public class SenhaIncorretaStrategy implements Strategy {
 
     @Override
     public void apply() {
-        throw new RuntimeException(SENHA_INCORRETA);
+        //throw new CustomException();
     }
 }

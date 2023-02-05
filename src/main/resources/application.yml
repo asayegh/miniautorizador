@@ -13,14 +13,24 @@ spring:
     username: root
     password:
     url: jdbc:mysql://localhost:3306/miniautorizador?useTimezone=true&serverTimeZone=UTC
+  server:
+    error:
+      include-binding-errors=always
+      include-message=always
 
-messages:
-  saldoInsuficiente: Saldo insuficiente!
-  senhaIncorreta: Senha incorreta!
-  cartaoInvalido: Cartão inexistente!
-  ok: OK
-constants:
-  senhaCorreta: SENHA_CORRETA
-  senhaIncorreta: SENHA_INCORRETA
-  saldoSuficiente: SALDO_SUFICIENTE
-  saldoInsuficiente: SALDO_INSUFICIENTE
+    logging:
+      level:
+        org.springframework.web: DEBUG
+        org.hibernate: ERROR
+
+  messages:
+    saldoInsuficiente: Saldo insuficiente!
+    senhaIncorreta: Senha incorreta!
+    cartaoInvalido: Cartão inexistente!
+    ok: OK
+
+  constants:
+    senhaCorreta: SENHA_CORRETA
+    senhaIncorreta: SENHA_INCORRETA
+    saldoSuficiente: SALDO_SUFICIENTE
+    saldoInsuficiente: SALDO_INSUFICIENTE
