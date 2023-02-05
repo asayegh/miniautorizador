@@ -16,6 +16,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
 
+import static com.vr.miniautorizador.util.Constants.*;
+
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
@@ -24,7 +26,7 @@ public class SwaggerConfig {
         return new ResponseMessageBuilder().code(code).message(message).build();
     }
 
-    private final ResponseMessage CODE_200 = simpleMessage(200, "Chamada realizada com successo");
+    private final ResponseMessage CODE_200 = simpleMessage(200,  "Chamada realizada com successo");
     private final ResponseMessage CODE_201 = simpleMessage(201, "Recurso criado");
     private final ResponseMessage CODE_204 = simpleMessage(204, "Recurso atualizado");
     private final ResponseMessage CODE_401 = simpleMessage(401, "Autorização requerida");
@@ -42,14 +44,16 @@ public class SwaggerConfig {
                 .build()
                 .globalResponseMessage(RequestMethod.POST, Arrays.asList(CODE_200, CODE_201, CODE_403, CODE_422, CODE_500))
                 .globalResponseMessage(RequestMethod.GET, Arrays.asList(CODE_403, CODE_404, CODE_500))
+                .globalResponseMessage(RequestMethod.PUT, Arrays.asList(CODE_403, CODE_204, CODE_422, CODE_500))
+                .globalResponseMessage(RequestMethod.DELETE, Arrays.asList(CODE_403, CODE_404, CODE_200))
                 .apiInfo(apiInfo());
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .version("1.0")
-                .title("Mini-Autorizador VR")
-                .description("API para transaçôes financeiras com cartões")
+                .version(API_VERSION)
+                .title(API_TITLE)
+                .description(API_DESCRIPTION)
                 .build();
     }
 }

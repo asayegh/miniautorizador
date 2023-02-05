@@ -17,6 +17,7 @@ import java.util.Date;
 public class Transacao implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
@@ -33,5 +34,3 @@ public class Transacao implements Serializable {
     @JsonIgnore
     private Cartao cartao;
 }
-// Post = transacao
-// Page = cartao

@@ -10,9 +10,12 @@ import com.vr.miniautorizador.strategy.Strategy;
 import com.vr.miniautorizador.strategy.StrategyConditionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.LockModeType;
 import java.util.Optional;
 
 import static com.vr.miniautorizador.util.Constants.*;
@@ -34,45 +37,42 @@ public class TransacaoService {
     public void decide(String someCondition) {
         String s = someCondition;
         Strategy strategy = strategyConditionFactory.getStrategy(someCondition)
-                .orElseThrow(() -> new IllegalArgumentException("Wrong condition"));
+                .orElseThrow(() -> new IllegalArgumentException(CONDICAO_INVALIDA));
         strategy.apply();
     }
 
-    private static boolean throwException(String message) {
-        throw new RuntimeException(message);
-    }
-
-    @Transactional
+    @Lock(LockModeType.OPTIMISTIC)
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public String criarTransacao(TransacaoRequestDto transacaoRequestDto) {
 
+            var numeroCartao = Optional.of(transacaoRequestDto.getNumeroCartao());
+            var senhaCartao = Optional.of(transacaoRequestDto.getSenhaCartao());
+            var valorTransacaoRequest = Optional.of(transacaoRequestDto.getValor());
 
-        var numeroCartao = Optional.of(transacaoRequestDto.getNumeroCartao());
-        var senhaCartao = Optional.of(transacaoRequestDto.getSenhaCartao());
-        var valorTransacaoRequest = Optional.of(transacaoRequestDto.getValor());
+            var cartao = cartaoRepository.findByNumeroCartao(numeroCartao.get());
+            cartao.orElseThrow(() -> new ErroCustomizadoTransacao(CARTAO_INEXISTENTE));
 
-        var cartao = cartaoRepository.findByNumeroCartao(numeroCartao.get());
-        cartao.orElseThrow(() -> new ErroCustomizadoTransacao(CARTAO_INEXISTENTE));
+            var comparaSenha = senhaCartao.get().equals(cartao.get().getSenha()) ? SENHA_VALIDA : SENHA_INVALIDA;
+            decide(comparaSenha);
 
-        var comparaSenha = senhaCartao.get().equals(cartao.get().getSenha()) ? SENHA_VALIDA : SENHA_INVALIDA;
-        decide(comparaSenha);
+            var saldo = cartao.get().getSaldo();
 
-        var saldo = cartao.get().getSaldo();
+            var comparaSaldo = saldo.compareTo(valorTransacaoRequest.get()) >= 0 ? SALDO_SUFICIENTE : SALDO_INSUFICIENTE;
+            decide(comparaSaldo);
 
-        var comparaSaldo = saldo.compareTo(valorTransacaoRequest.get()) >= 0 ? SALDO_SUFICIENTE : SALDO_INSUFICIENTE;
-        decide(comparaSaldo);
+            var transacaoResponse = new TransacaoResponseDto();
+            transacaoResponse.setValorTransacao(valorTransacaoRequest.get());
 
-        var transacaoResponse = new TransacaoResponseDto();
-        transacaoResponse.setValorTransacao(valorTransacaoRequest.get());
+            var transacao = new Transacao();
+            transacao.setCartao(cartao.get());
+            transacao.setValorTransacao(valorTransacaoRequest.get());
 
-        var transacao = new Transacao();
-        transacao.setCartao(cartao.get());
-        transacao.setValorTransacao(valorTransacaoRequest.get());
+            cartao.get().setSaldo(cartao.get().getSaldo().subtract(valorTransacaoRequest.get()));
 
-        cartao.get().setSaldo(cartao.get().getSaldo().subtract(valorTransacaoRequest.get()));
+            cartaoRepository.save(cartao.get());
+            transacaoRepository.save(transacao);
 
-        cartaoRepository.save(cartao.get());
-        transacaoRepository.save(transacao);
+            return OK;
 
-        return OK;
     }
 }

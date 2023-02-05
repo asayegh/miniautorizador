@@ -13,4 +13,12 @@ public final class Constants {
 
     public static final String CARTAO_INEXISTENTE = "CARTAO_INEXISTENTE";
 
+    public static final String CONDICAO_INVALIDA = "Condição inválida";
+
+    public static final String API_VERSION = "1.0";
+    public static final String API_TITLE = "Mini-Autorizador VR";
+    public static final String API_DESCRIPTION = "API para transaçôes financeiras com cartões";
+
+
+
 }
