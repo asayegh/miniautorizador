@@ -1,7 +1,6 @@
 package com.vr.miniautorizador.strategy;
 
 import com.vr.miniautorizador.exception.ErroCustomizadoTransacao;
-
 import static com.vr.miniautorizador.util.Constants.SENHA_INVALIDA;
 
 public class SenhaIncorretaStrategy implements Strategy {

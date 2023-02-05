@@ -11,6 +11,7 @@ import com.vr.miniautorizador.strategy.StrategyConditionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -19,8 +20,6 @@ import static com.vr.miniautorizador.util.Constants.*;
 @Service
 public class TransacaoService {
 
-    /*@Value("${spring.messages.cartaoInvalido}")
-    private String CARTAO_INEXISTENTE;*/
     @Value("${spring.messages.ok}")
     private String OK;
 
@@ -43,6 +42,7 @@ public class TransacaoService {
         throw new RuntimeException(message);
     }
 
+    @Transactional
     public String criarTransacao(TransacaoRequestDto transacaoRequestDto) {
 
 
@@ -58,7 +58,7 @@ public class TransacaoService {
 
         var saldo = cartao.get().getSaldo();
 
-        var comparaSaldo = saldo.compareTo(valorTransacaoRequest.get()) == 1 ? SALDO_SUFICIENTE : SALDO_INSUFICIENTE;
+        var comparaSaldo = saldo.compareTo(valorTransacaoRequest.get()) >= 0 ? SALDO_SUFICIENTE : SALDO_INSUFICIENTE;
         decide(comparaSaldo);
 
         var transacaoResponse = new TransacaoResponseDto();
