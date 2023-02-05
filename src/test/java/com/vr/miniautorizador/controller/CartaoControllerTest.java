@@ -2,7 +2,6 @@ package com.vr.miniautorizador.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vr.miniautorizador.builder.CartaoBuilder;
-import com.vr.miniautorizador.dto.CartaoRequestDto;
 import com.vr.miniautorizador.exception.ResourceNotFoundException;
 import com.vr.miniautorizador.exception.ValidacaoCriarCartao;
 import com.vr.miniautorizador.service.CartaoService;
@@ -111,7 +110,8 @@ class CartaoControllerTest {
 
         var cartaoRequestDto = CartaoBuilder.cartaoRequestDto();
 
-        when(cartaoService.buscaCartaoPorNumero("1234567890123456")).thenThrow(ResourceNotFoundException.class);
+        when(cartaoService.buscaCartaoPorNumero("1234567890123456"))
+                .thenThrow(ResourceNotFoundException.class);
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL + PATH_CARTAO, "1234567890123456")
                         .contentType(APPLICATION_JSON)
