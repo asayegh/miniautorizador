@@ -1,18 +1,13 @@
 package com.vr.miniautorizador.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vr.miniautorizador.builder.CartaoBuilder;
-import com.vr.miniautorizador.dto.CartaoResponseDto;
 import com.vr.miniautorizador.exception.ResourceNotFoundException;
 import com.vr.miniautorizador.exception.ValidacaoCriarCartao;
 import com.vr.miniautorizador.model.Cartao;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,9 +19,7 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
 import static org.mockito.ArgumentMatchers.any;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -80,7 +73,7 @@ public class CartaoServiceTest {
         when(cartaoRepository.findByNumeroCartao(numeroCartao)).thenReturn(Optional.of(cartao));
         var saldo = cartaoService.buscaCartaoPorNumero(numeroCartao);
 
-        assertThat(saldo,  Matchers.comparesEqualTo(new BigDecimal("450.00")));
+        assertThat(saldo, Matchers.comparesEqualTo(new BigDecimal("450.00")));
     }
 
     @Test

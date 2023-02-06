@@ -39,7 +39,7 @@ class CartaoControllerTest {
 
     //POST
     @Test
-    void testeCriarCartaoValidoDeveRetornarHttpStatusCode201() throws Exception {
+    void testeCriarCartaoValidoRetornaHttpStatusCode201() throws Exception {
 
         var cartaoRequestDto = CartaoBuilder.cartaoRequestDto();
 
@@ -50,7 +50,7 @@ class CartaoControllerTest {
     }
 
     @Test
-    void testePostarCartaoDuplicadoDeveGerarErroValidacaoCriarCartao() throws Exception {
+    void testePostarCartaoDuplicadoGeraExcecao() throws Exception {
 
         var cartaoRequestDto = CartaoBuilder.cartaoRequestDto();
 
@@ -63,7 +63,7 @@ class CartaoControllerTest {
     }
 
     @Test
-    void testePostarCartaoInvalidoDeveGerarConstraintViolationException() throws Exception {
+    void testePostarCartaoInvalidoGeraExcecao() throws Exception {
 
         var cartaoRequestDto = CartaoBuilder.cartaoRequestDtoNumeroCartaoInvalido();
 
@@ -76,7 +76,7 @@ class CartaoControllerTest {
     }
 
     @Test
-    void testePostarSenhaInvalidaDeveGerarConstraintViolationException() throws Exception {
+    void testePostarSenhaInvalidaGeraExcecao() throws Exception {
 
         var cartaoRequestDto = CartaoBuilder.cartaoRequestDtoSenhaInvalida();
 
@@ -90,7 +90,7 @@ class CartaoControllerTest {
 
     //GET
     @Test
-    void testeObterCartaoPeloNumeroDeveRetornarHttpStatusCode200() throws Exception {
+    void testeObterCartaoPeloNumeroCorretoRetornaHttpStatusCode200() throws Exception {
 
         var cartaoRequestDto = CartaoBuilder.cartaoRequestDto();
 
@@ -100,13 +100,13 @@ class CartaoControllerTest {
                         .accept(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get(URL + "/{numeroCartao}", "1102003948572938"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get(URL + PATH_CARTAO, "1102003948572938"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
     }
 
     @Test
-    void testeObterCartaoPeloNumeroCorretoSenhaIncorretaDeveRetornarHttpStatusCode404() throws Exception {
+    void testeObterCartaoNumeroCorretoSenhaIncorretaRetornaHttpStatusCode404() throws Exception {
 
         var cartaoRequestDto = CartaoBuilder.cartaoRequestDto();
 

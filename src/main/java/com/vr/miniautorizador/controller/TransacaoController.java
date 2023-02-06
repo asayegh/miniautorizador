@@ -22,10 +22,10 @@ public class TransacaoController {
     @Autowired
     private TransacaoService service;
 
-    @ApiOperation(value = "Executa uma transaçao financeira")
+    @ApiOperation(value = "Executa uma transação financeira")
     @PostMapping
-    public ResponseEntity<String> criarTransacao(@RequestBody @Valid TransacaoRequestDto transacaoDto) {
-       return new ResponseEntity<>(service.criarTransacao(transacaoDto),
+    public ResponseEntity<String> criarTransacao(@RequestBody @Valid TransacaoRequestDto transacaoRequestDto) {
+       return new ResponseEntity<>(service.criarTransacao(transacaoRequestDto),
                 HttpStatus.CREATED);
     }
 }

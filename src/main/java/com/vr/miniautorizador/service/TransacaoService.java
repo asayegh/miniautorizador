@@ -52,12 +52,12 @@ public class TransacaoService {
             var cartao = cartaoRepository.findByNumeroCartao(numeroCartao.get());
             cartao.orElseThrow(() -> new ErroCustomizadoTransacao(CARTAO_INEXISTENTE));
 
-            var comparaSenha = senhaCartao.get().equals(cartao.get().getSenha()) ? SENHA_VALIDA : SENHA_INVALIDA;
+            var comparaSenha = senhaCartao.get().equals(cartao.get().getSenha()) ?
+                    SENHA_VALIDA : SENHA_INVALIDA;
             decide(comparaSenha);
-
             var saldo = cartao.get().getSaldo();
-
-            var comparaSaldo = saldo.compareTo(valorTransacaoRequest.get()) >= 0 ? SALDO_SUFICIENTE : SALDO_INSUFICIENTE;
+            var comparaSaldo = saldo.compareTo(valorTransacaoRequest.get()) >= 0 ?
+                    SALDO_SUFICIENTE : SALDO_INSUFICIENTE;
             decide(comparaSaldo);
 
             var transacaoResponse = new TransacaoResponseDto();

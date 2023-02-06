@@ -1,7 +1,6 @@
 package com.vr.miniautorizador.builder;
 
 import com.vr.miniautorizador.dto.CartaoRequestDto;
-import com.vr.miniautorizador.model.Cartao;
 
 public class CartaoBuilder {
 
