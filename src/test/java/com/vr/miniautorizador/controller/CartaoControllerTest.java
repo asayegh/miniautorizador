@@ -3,7 +3,7 @@ package com.vr.miniautorizador.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vr.miniautorizador.builder.CartaoBuilder;
 import com.vr.miniautorizador.exception.ResourceNotFoundException;
-import com.vr.miniautorizador.exception.ValidacaoCriarCartao;
+import com.vr.miniautorizador.exception.validation.ValidacaoCriarCartaoErroImprocessavel;
 import com.vr.miniautorizador.service.CartaoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ class CartaoControllerTest {
 
         var cartaoRequestDto = CartaoBuilder.cartaoRequestDto();
 
-        when(cartaoService.criarCartao(cartaoRequestDto)).thenThrow(ValidacaoCriarCartao.class);
+        when(cartaoService.criarCartao(cartaoRequestDto)).thenThrow(ValidacaoCriarCartaoErroImprocessavel.class);
 
         mockMvc.perform(post(URL)
                         .contentType(APPLICATION_JSON)

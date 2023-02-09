@@ -19,6 +19,9 @@ public final class Constants {
     public static final String API_TITLE = "Mini-Autorizador VR";
     public static final String API_DESCRIPTION = "API para transaçôes financeiras com cartões";
 
+    public static final String ERRO_CONEXAO_BANCO = "Erro de conexão com o banco de dados";
+    public static final String ERRO_SQL = "Erro executando comando SQL no banco de dados";
+
 
 
 }

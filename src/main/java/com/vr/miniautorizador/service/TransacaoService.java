@@ -2,7 +2,8 @@ package com.vr.miniautorizador.service;
 
 import com.vr.miniautorizador.dto.TransacaoRequestDto;
 import com.vr.miniautorizador.dto.TransacaoResponseDto;
-import com.vr.miniautorizador.exception.ErroCustomizadoTransacao;
+import com.vr.miniautorizador.exception.sql.ValidacaoOperacaoSqlExcecao;
+import com.vr.miniautorizador.exception.transaction.ErroCustomizadoTransacao;
 import com.vr.miniautorizador.model.Transacao;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import com.vr.miniautorizador.repository.TransacaoRepository;
@@ -45,34 +46,38 @@ public class TransacaoService {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public String criarTransacao(TransacaoRequestDto transacaoRequestDto) {
 
-            var numeroCartao = Optional.of(transacaoRequestDto.getNumeroCartao());
-            var senhaCartao = Optional.of(transacaoRequestDto.getSenhaCartao());
-            var valorTransacaoRequest = Optional.of(transacaoRequestDto.getValor());
+        var numeroCartao = Optional.of(transacaoRequestDto.getNumeroCartao());
+        var senhaCartao = Optional.of(transacaoRequestDto.getSenhaCartao());
+        var valorTransacaoRequest = Optional.of(transacaoRequestDto.getValor());
 
-            var cartao = cartaoRepository.findByNumeroCartao(numeroCartao.get());
-            cartao.orElseThrow(() -> new ErroCustomizadoTransacao(CARTAO_INEXISTENTE));
+        var cartao = cartaoRepository.findByNumeroCartao(numeroCartao.get());
+        cartao.orElseThrow(() -> new ErroCustomizadoTransacao(CARTAO_INEXISTENTE));
 
-            var comparaSenha = senhaCartao.get().equals(cartao.get().getSenha()) ?
-                    SENHA_VALIDA : SENHA_INVALIDA;
-            decide(comparaSenha);
-            var saldo = cartao.get().getSaldo();
-            var comparaSaldo = saldo.compareTo(valorTransacaoRequest.get()) >= 0 ?
-                    SALDO_SUFICIENTE : SALDO_INSUFICIENTE;
-            decide(comparaSaldo);
+        var comparaSenha = senhaCartao.get().equals(cartao.get().getSenha()) ?
+                SENHA_VALIDA : SENHA_INVALIDA;
+        decide(comparaSenha);
+        var saldo = cartao.get().getSaldo();
+        var comparaSaldo = saldo.compareTo(valorTransacaoRequest.get()) >= 0 ?
+                SALDO_SUFICIENTE : SALDO_INSUFICIENTE;
+        decide(comparaSaldo);
 
-            var transacaoResponse = new TransacaoResponseDto();
-            transacaoResponse.setValorTransacao(valorTransacaoRequest.get());
+        var transacaoResponse = new TransacaoResponseDto();
+        transacaoResponse.setValorTransacao(valorTransacaoRequest.get());
 
-            var transacao = new Transacao();
-            transacao.setCartao(cartao.get());
-            transacao.setValorTransacao(valorTransacaoRequest.get());
+        var transacao = new Transacao();
+        transacao.setCartao(cartao.get());
+        transacao.setValorTransacao(valorTransacaoRequest.get());
 
-            cartao.get().setSaldo(cartao.get().getSaldo().subtract(valorTransacaoRequest.get()));
+        cartao.get().setSaldo(cartao.get().getSaldo().subtract(valorTransacaoRequest.get()));
 
-            cartaoRepository.save(cartao.get());
+        try {
             transacaoRepository.save(transacao);
+            cartaoRepository.save(cartao.get());
+        } catch (RuntimeException e) {
+            throw new ValidacaoOperacaoSqlExcecao();
+        }
 
-            return OK;
+        return OK;
 
     }
 }

@@ -2,7 +2,7 @@ package com.vr.miniautorizador.service;
 
 import com.vr.miniautorizador.builder.CartaoBuilder;
 import com.vr.miniautorizador.exception.ResourceNotFoundException;
-import com.vr.miniautorizador.exception.ValidacaoCriarCartao;
+import com.vr.miniautorizador.exception.validation.ValidacaoCriarCartaoErroImprocessavel;
 import com.vr.miniautorizador.model.Cartao;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import org.hamcrest.Matchers;
@@ -55,9 +55,9 @@ public class CartaoServiceTest {
 
         var cartaoRequestDto = CartaoBuilder.cartaoRequestDto();
 
-        when(cartaoRepository.save(any(Cartao.class))).thenThrow(ValidacaoCriarCartao.class);
+        when(cartaoRepository.save(any(Cartao.class))).thenThrow(ValidacaoCriarCartaoErroImprocessavel.class);
 
-        assertThrows(ValidacaoCriarCartao.class,
+        assertThrows(ValidacaoCriarCartaoErroImprocessavel.class,
                 () -> cartaoService.criarCartao(cartaoRequestDto));
 
     }

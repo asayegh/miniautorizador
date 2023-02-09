@@ -3,7 +3,7 @@ package com.vr.miniautorizador.service;
 import com.vr.miniautorizador.dto.CartaoRequestDto;
 import com.vr.miniautorizador.dto.CartaoResponseDto;
 import com.vr.miniautorizador.exception.ResourceNotFoundException;
-import com.vr.miniautorizador.exception.ValidacaoCriarCartao;
+import com.vr.miniautorizador.exception.validation.ValidacaoCriarCartaoErroImprocessavel;
 import com.vr.miniautorizador.model.Cartao;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import org.modelmapper.ModelMapper;
@@ -39,7 +39,7 @@ public class CartaoService {
                         .numeroCartao(cartaoRequestDto.getNumeroCartao())
                         .senha(cartaoRequestDto.getSenha())
                         .build();
-                throw new ValidacaoCriarCartao(cartaoResponseDto);
+                throw new ValidacaoCriarCartaoErroImprocessavel(cartaoResponseDto);
             }
 
             var response = mapper.map(cartao, CartaoResponseDto.class);

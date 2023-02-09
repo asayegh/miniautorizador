@@ -1,6 +1,7 @@
 package com.vr.miniautorizador.controller;
 
 import com.vr.miniautorizador.dto.TransacaoRequestDto;
+import com.vr.miniautorizador.exception.sql.OperacaoSqlErro;
 import com.vr.miniautorizador.service.TransacaoService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

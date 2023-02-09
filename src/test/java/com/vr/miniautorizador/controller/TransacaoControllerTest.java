@@ -2,7 +2,7 @@ package com.vr.miniautorizador.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vr.miniautorizador.dto.TransacaoRequestDto;
-import com.vr.miniautorizador.exception.ErroCustomizadoTransacao;
+import com.vr.miniautorizador.exception.transaction.ErroCustomizadoTransacao;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import com.vr.miniautorizador.repository.TransacaoRepository;
 import com.vr.miniautorizador.service.TransacaoService;

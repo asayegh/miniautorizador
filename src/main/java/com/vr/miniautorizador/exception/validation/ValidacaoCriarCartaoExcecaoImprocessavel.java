@@ -1,4 +1,4 @@
-package com.vr.miniautorizador.exception;
+package com.vr.miniautorizador.exception.validation;
 
 import com.vr.miniautorizador.dto.CartaoResponseDto;
 import org.springframework.http.ResponseEntity;
@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class ValidacaoCriarCartaoExcecao {
+public class ValidacaoCriarCartaoExcecaoImprocessavel {
 
-    @ExceptionHandler(ValidacaoCriarCartao.class)
-    public ResponseEntity<CartaoResponseDto> handle(ValidacaoCriarCartao ex) {
+    @ExceptionHandler(ValidacaoCriarCartaoErroImprocessavel.class)
+    public ResponseEntity<CartaoResponseDto> handle(ValidacaoCriarCartaoErroImprocessavel ex) {
 
         var cartaoResponseDto = ex.getCartaoResponseDto();
         return ResponseEntity.unprocessableEntity().body(cartaoResponseDto);

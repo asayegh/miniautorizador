@@ -1,4 +1,4 @@
-package com.vr.miniautorizador.exception;
+package com.vr.miniautorizador.exception.transaction;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

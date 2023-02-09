@@ -8,11 +8,18 @@ spring:
         dialect: org.hibernate.dialect.MySQL57Dialect
       show-sql: false
   datasource:
+    #validationQuery: SELECT 1
+    #testOnBorrow: true
     dcp2:
       driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password:
     url: jdbc:mysql://localhost:3306/miniautorizador?useTimezone=true&serverTimeZone=UTC
+    hikari:
+      max-lifetime=1000
+      connection-timeout=1000
+      validation-timeout=1000
+      maximum-pool-size=10
   server:
     error:
       include-binding-errors=always

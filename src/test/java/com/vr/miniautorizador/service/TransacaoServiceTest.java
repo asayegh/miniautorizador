@@ -2,7 +2,7 @@ package com.vr.miniautorizador.service;
 
 import com.vr.miniautorizador.dto.CartaoRequestDto;
 import com.vr.miniautorizador.dto.TransacaoRequestDto;
-import com.vr.miniautorizador.exception.ErroCustomizadoTransacao;
+import com.vr.miniautorizador.exception.transaction.ErroCustomizadoTransacao;
 import com.vr.miniautorizador.model.Cartao;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import com.vr.miniautorizador.repository.TransacaoRepository;

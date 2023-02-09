@@ -1,4 +1,4 @@
-package com.vr.miniautorizador.exception;
+package com.vr.miniautorizador.exception.transaction;
 
 public class ErroCustomizadoTransacao extends RuntimeException {
 

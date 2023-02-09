@@ -1,4 +1,4 @@
-package com.vr.miniautorizador.exception;
+package com.vr.miniautorizador.exception.validation;
 
 
 import org.springframework.http.HttpHeaders;
