@@ -1,7 +1,7 @@
 package com.vr.miniautorizador.service;
 
 import com.vr.miniautorizador.builder.CartaoBuilder;
-import com.vr.miniautorizador.exception.ResourceNotFoundException;
+import com.vr.miniautorizador.exception.ErroCustomizadoNotFoundResposta;
 import com.vr.miniautorizador.exception.validation.ValidacaoCriarCartaoErroImprocessavel;
 import com.vr.miniautorizador.model.Cartao;
 import com.vr.miniautorizador.repository.CartaoRepository;
@@ -81,9 +81,9 @@ public class CartaoServiceTest {
 
         String numeroCartao = "2993029182923357";
 
-        when(cartaoRepository.findByNumeroCartao(numeroCartao)).thenThrow(ResourceNotFoundException.class);
+        when(cartaoRepository.findByNumeroCartao(numeroCartao)).thenThrow(ErroCustomizadoNotFoundResposta.class);
 
-        assertThrows(ResourceNotFoundException.class,
+        assertThrows(ErroCustomizadoNotFoundResposta.class,
                 () -> cartaoService.buscaCartaoPorNumero(numeroCartao));
 
     }

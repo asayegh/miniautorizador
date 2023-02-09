@@ -1,12 +1,12 @@
 package com.vr.miniautorizador.strategy;
 
-import com.vr.miniautorizador.exception.transaction.ErroCustomizadoTransacao;
+import com.vr.miniautorizador.exception.transaction.ErroCustomizadoTransacaoResposta;
 import static com.vr.miniautorizador.util.Constants.SALDO_INSUFICIENTE;
 
 public class SaldoInsuficienteStrategy implements Strategy {
 
     @Override
     public void apply() {
-        throw new ErroCustomizadoTransacao(SALDO_INSUFICIENTE);
+        throw new ErroCustomizadoTransacaoResposta(SALDO_INSUFICIENTE);
     }
 }

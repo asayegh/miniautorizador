@@ -2,7 +2,7 @@ package com.vr.miniautorizador.service;
 
 import com.vr.miniautorizador.dto.CartaoRequestDto;
 import com.vr.miniautorizador.dto.CartaoResponseDto;
-import com.vr.miniautorizador.exception.ResourceNotFoundException;
+import com.vr.miniautorizador.exception.ErroCustomizadoNotFoundResposta;
 import com.vr.miniautorizador.exception.validation.ValidacaoCriarCartaoErroImprocessavel;
 import com.vr.miniautorizador.model.Cartao;
 import com.vr.miniautorizador.repository.CartaoRepository;
@@ -50,7 +50,7 @@ public class CartaoService {
 
         Optional<Cartao> cartao = cartaoRepository.findByNumeroCartao(numeroCartao);
         cartao.orElseThrow(
-                () -> new ResourceNotFoundException("Recurso não encontrado")
+                () -> new ErroCustomizadoNotFoundResposta("Recurso não encontrado")
         );
         return cartao.get().getSaldo();
     }

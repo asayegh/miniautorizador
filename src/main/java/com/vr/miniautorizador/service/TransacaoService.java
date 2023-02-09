@@ -3,7 +3,7 @@ package com.vr.miniautorizador.service;
 import com.vr.miniautorizador.dto.TransacaoRequestDto;
 import com.vr.miniautorizador.dto.TransacaoResponseDto;
 import com.vr.miniautorizador.exception.sql.ValidacaoOperacaoSqlExcecao;
-import com.vr.miniautorizador.exception.transaction.ErroCustomizadoTransacao;
+import com.vr.miniautorizador.exception.transaction.ErroCustomizadoTransacaoResposta;
 import com.vr.miniautorizador.model.Transacao;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import com.vr.miniautorizador.repository.TransacaoRepository;
@@ -51,7 +51,7 @@ public class TransacaoService {
         var valorTransacaoRequest = Optional.of(transacaoRequestDto.getValor());
 
         var cartao = cartaoRepository.findByNumeroCartao(numeroCartao.get());
-        cartao.orElseThrow(() -> new ErroCustomizadoTransacao(CARTAO_INEXISTENTE));
+        cartao.orElseThrow(() -> new ErroCustomizadoTransacaoResposta(CARTAO_INEXISTENTE));
 
         var comparaSenha = senhaCartao.get().equals(cartao.get().getSenha()) ?
                 SENHA_VALIDA : SENHA_INVALIDA;

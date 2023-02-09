@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class ValidacaoCriarCartaoExcecaoImprocessavel {
+public class ValidacaoCriarCartaoErroImprocessavelExcecao {
 
     @ExceptionHandler(ValidacaoCriarCartaoErroImprocessavel.class)
     public ResponseEntity<CartaoResponseDto> handle(ValidacaoCriarCartaoErroImprocessavel ex) {

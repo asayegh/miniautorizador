@@ -2,7 +2,7 @@ package com.vr.miniautorizador.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vr.miniautorizador.dto.TransacaoRequestDto;
-import com.vr.miniautorizador.exception.transaction.ErroCustomizadoTransacao;
+import com.vr.miniautorizador.exception.transaction.ErroCustomizadoTransacaoResposta;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import com.vr.miniautorizador.repository.TransacaoRepository;
 import com.vr.miniautorizador.service.TransacaoService;
@@ -69,7 +69,7 @@ public class TransacaoControllerTest {
                 .valor(new BigDecimal("150.00"))
                 .build();
 
-        when(transacaoService.criarTransacao(transacaoRequestDto)).thenThrow(ErroCustomizadoTransacao.class);
+        when(transacaoService.criarTransacao(transacaoRequestDto)).thenThrow(ErroCustomizadoTransacaoResposta.class);
 
         mockMvc.perform(post(URL)
                         .contentType(APPLICATION_JSON)

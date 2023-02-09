@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 import static com.vr.miniautorizador.util.Constants.ERRO_CONEXAO_BANCO;
 
 @ControllerAdvice
-public class ValidacaoConexaoErro {
+public class ValidacaoConexaoSqlExcecao {
 
     @ExceptionHandler(ConnectException.class)
-    public ResponseEntity<ConexaoErro> handleConnectException(ConnectException ex) {
+    public ResponseEntity<ErroCustomizadoSqlResposta> handleConnectException(ConnectException ex) {
 
-        var conexaoErro = new ConexaoErro().builder()
+        var conexaoErro = new ErroCustomizadoSqlResposta().builder()
                 .codigo(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .mensagem(ERRO_CONEXAO_BANCO)
                 .data(LocalDateTime.now())

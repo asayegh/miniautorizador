@@ -13,9 +13,9 @@ import static com.vr.miniautorizador.util.Constants.ERRO_SQL;
 public class ValidacaoOperacaoSqlExcecao extends RuntimeException {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<OperacaoSqlErro> handle(RuntimeException e) {
+    public ResponseEntity<ErroCustomizadoSqlResposta> handle(RuntimeException e) {
 
-        var operacaoSqlErro = new OperacaoSqlErro().builder()
+        var operacaoSqlErro = new ErroCustomizadoSqlResposta().builder()
                 .codigo(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .mensagem(ERRO_SQL)
                 .data(LocalDateTime.now())

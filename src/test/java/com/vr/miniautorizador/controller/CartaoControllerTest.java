@@ -2,7 +2,7 @@ package com.vr.miniautorizador.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vr.miniautorizador.builder.CartaoBuilder;
-import com.vr.miniautorizador.exception.ResourceNotFoundException;
+import com.vr.miniautorizador.exception.ErroCustomizadoNotFoundResposta;
 import com.vr.miniautorizador.exception.validation.ValidacaoCriarCartaoErroImprocessavel;
 import com.vr.miniautorizador.service.CartaoService;
 import org.junit.jupiter.api.Test;
@@ -111,7 +111,7 @@ class CartaoControllerTest {
         var cartaoRequestDto = CartaoBuilder.cartaoRequestDto();
 
         when(cartaoService.buscaCartaoPorNumero("1234567890123456"))
-                .thenThrow(ResourceNotFoundException.class);
+                .thenThrow(ErroCustomizadoNotFoundResposta.class);
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL + PATH_CARTAO, "1234567890123456")
                         .contentType(APPLICATION_JSON)

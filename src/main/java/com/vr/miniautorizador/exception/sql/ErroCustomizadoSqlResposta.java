@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConexaoErro {
+public class ErroCustomizadoSqlResposta {
 
     private int codigo;
     private String mensagem;

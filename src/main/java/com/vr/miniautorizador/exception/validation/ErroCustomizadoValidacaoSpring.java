@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class ManipuladorValidacaoExcecao extends ResponseEntityExceptionHandler {
+public class ErroCustomizadoValidacaoSpring extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -26,9 +26,9 @@ public class ManipuladorValidacaoExcecao extends ResponseEntityExceptionHandler 
                 .map(x -> x.getDefaultMessage())
                 .collect(Collectors.toList());
 
-        MensagemValidacaoApiExcecao mensagemValidacaoApiExcecao = new MensagemValidacaoApiExcecao(status, errors);
+        ValidacaoSpringExcecao validacaoSpringExcecao = new ValidacaoSpringExcecao(status, errors);
 
-        return new ResponseEntity<>(mensagemValidacaoApiExcecao, mensagemValidacaoApiExcecao.getStatus());
+        return new ResponseEntity<>(validacaoSpringExcecao, validacaoSpringExcecao.getStatus());
     }
 
 }
