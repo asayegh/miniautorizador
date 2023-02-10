@@ -2,8 +2,8 @@ package com.vr.miniautorizador.service;
 
 import com.vr.miniautorizador.dto.CartaoRequestDto;
 import com.vr.miniautorizador.dto.CartaoResponseDto;
-import com.vr.miniautorizador.exception.rule.RecursoNaoEncontradoErro;
 import com.vr.miniautorizador.exception.rule.CartaoImprocessavelErro;
+import com.vr.miniautorizador.exception.rule.RecursoNaoEncontradoErro;
 import com.vr.miniautorizador.model.Cartao;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import org.modelmapper.ModelMapper;

@@ -1,7 +1,6 @@
 package com.vr.miniautorizador.exception.rule;
 
 import com.vr.miniautorizador.dto.CartaoResponseDto;
-import com.vr.miniautorizador.exception.rule.CartaoImprocessavelErro;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

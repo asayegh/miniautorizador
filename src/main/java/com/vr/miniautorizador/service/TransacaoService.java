@@ -2,8 +2,8 @@ package com.vr.miniautorizador.service;
 
 import com.vr.miniautorizador.dto.TransacaoRequestDto;
 import com.vr.miniautorizador.dto.TransacaoResponseDto;
-import com.vr.miniautorizador.exception.sql.OperacaoSqlExcecao;
 import com.vr.miniautorizador.exception.input.InputErro;
+import com.vr.miniautorizador.exception.sql.OperacaoSqlExcecao;
 import com.vr.miniautorizador.model.Transacao;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import com.vr.miniautorizador.repository.TransacaoRepository;
