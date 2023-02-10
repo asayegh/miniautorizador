@@ -1,11 +1,11 @@
-package com.vr.miniautorizador.exception;
+package com.vr.miniautorizador.exception.rule;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class ErroCustomizadoNotFoundResposta extends RuntimeException {
-    public ErroCustomizadoNotFoundResposta(String message) {
+public class RecursoNaoEncontradoErro extends RuntimeException {
+    public RecursoNaoEncontradoErro(String message) {
         super(message);
     }
 }

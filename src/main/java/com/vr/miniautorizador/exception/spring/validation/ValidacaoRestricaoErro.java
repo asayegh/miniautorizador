@@ -1,6 +1,7 @@
-package com.vr.miniautorizador.exception.validation;
+package com.vr.miniautorizador.exception.spring.validation;
 
 
+import com.vr.miniautorizador.exception.spring.validation.ValidacaoRestricaoExcecao;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class ErroCustomizadoValidacaoSpring extends ResponseEntityExceptionHandler {
+public class ValidacaoRestricaoErro extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -23,12 +24,12 @@ public class ErroCustomizadoValidacaoSpring extends ResponseEntityExceptionHandl
         List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(x -> x.getDefaultMessage())
+                .map(x -> x.getField().concat(": ").concat(x.getDefaultMessage()))
                 .collect(Collectors.toList());
 
-        ValidacaoSpringExcecao validacaoSpringExcecao = new ValidacaoSpringExcecao(status, errors);
+        ValidacaoRestricaoExcecao validacaoRestricaoExcecao = new ValidacaoRestricaoExcecao(status, errors);
 
-        return new ResponseEntity<>(validacaoSpringExcecao, validacaoSpringExcecao.getStatus());
+        return new ResponseEntity<>(validacaoRestricaoExcecao, validacaoRestricaoExcecao.getStatus());
     }
 
 }

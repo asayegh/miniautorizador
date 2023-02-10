@@ -1,8 +1,8 @@
 package com.vr.miniautorizador.service;
 
 import com.vr.miniautorizador.builder.CartaoBuilder;
-import com.vr.miniautorizador.exception.ErroCustomizadoNotFoundResposta;
-import com.vr.miniautorizador.exception.validation.ValidacaoCriarCartaoErroImprocessavel;
+import com.vr.miniautorizador.exception.rule.RecursoNaoEncontradoErro;
+import com.vr.miniautorizador.exception.rule.CartaoImprocessavelErro;
 import com.vr.miniautorizador.model.Cartao;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import org.hamcrest.Matchers;
@@ -55,9 +55,9 @@ public class CartaoServiceTest {
 
         var cartaoRequestDto = CartaoBuilder.cartaoRequestDto();
 
-        when(cartaoRepository.save(any(Cartao.class))).thenThrow(ValidacaoCriarCartaoErroImprocessavel.class);
+        when(cartaoRepository.save(any(Cartao.class))).thenThrow(CartaoImprocessavelErro.class);
 
-        assertThrows(ValidacaoCriarCartaoErroImprocessavel.class,
+        assertThrows(CartaoImprocessavelErro.class,
                 () -> cartaoService.criarCartao(cartaoRequestDto));
 
     }
@@ -81,9 +81,9 @@ public class CartaoServiceTest {
 
         String numeroCartao = "2993029182923357";
 
-        when(cartaoRepository.findByNumeroCartao(numeroCartao)).thenThrow(ErroCustomizadoNotFoundResposta.class);
+        when(cartaoRepository.findByNumeroCartao(numeroCartao)).thenThrow(RecursoNaoEncontradoErro.class);
 
-        assertThrows(ErroCustomizadoNotFoundResposta.class,
+        assertThrows(RecursoNaoEncontradoErro.class,
                 () -> cartaoService.buscaCartaoPorNumero(numeroCartao));
 
     }

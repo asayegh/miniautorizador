@@ -2,8 +2,8 @@ package com.vr.miniautorizador.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vr.miniautorizador.builder.CartaoBuilder;
-import com.vr.miniautorizador.exception.ErroCustomizadoNotFoundResposta;
-import com.vr.miniautorizador.exception.validation.ValidacaoCriarCartaoErroImprocessavel;
+import com.vr.miniautorizador.exception.rule.RecursoNaoEncontradoErro;
+import com.vr.miniautorizador.exception.rule.CartaoImprocessavelErro;
 import com.vr.miniautorizador.service.CartaoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ class CartaoControllerTest {
 
         var cartaoRequestDto = CartaoBuilder.cartaoRequestDto();
 
-        when(cartaoService.criarCartao(cartaoRequestDto)).thenThrow(ValidacaoCriarCartaoErroImprocessavel.class);
+        when(cartaoService.criarCartao(cartaoRequestDto)).thenThrow(CartaoImprocessavelErro.class);
 
         mockMvc.perform(post(URL)
                         .contentType(APPLICATION_JSON)
@@ -111,7 +111,7 @@ class CartaoControllerTest {
         var cartaoRequestDto = CartaoBuilder.cartaoRequestDto();
 
         when(cartaoService.buscaCartaoPorNumero("1234567890123456"))
-                .thenThrow(ErroCustomizadoNotFoundResposta.class);
+                .thenThrow(RecursoNaoEncontradoErro.class);
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL + PATH_CARTAO, "1234567890123456")
                         .contentType(APPLICATION_JSON)

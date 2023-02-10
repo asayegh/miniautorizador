@@ -1,4 +1,4 @@
-package com.vr.miniautorizador.exception.validation;
+package com.vr.miniautorizador.exception.spring.validation;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,19 +9,19 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ValidacaoSpringExcecao {
+public class ValidacaoRestricaoExcecao {
 
     private HttpStatus status;
     private List<String> erros;
 
-    public ValidacaoSpringExcecao(HttpStatus status, List<String> errors) {
+    public ValidacaoRestricaoExcecao(HttpStatus status, List<String> errors) {
 
         super();
         this.status = status;
         this.erros = errors;
     }
 
-    public ValidacaoSpringExcecao(HttpStatus status, String erro) {
+    public ValidacaoRestricaoExcecao(HttpStatus status, String erro) {
 
         super();
         this.status = status;

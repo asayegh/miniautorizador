@@ -1,4 +1,4 @@
-package com.vr.miniautorizador.exception.validation;
+package com.vr.miniautorizador.exception.rule;
 
 import com.vr.miniautorizador.dto.CartaoResponseDto;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @AllArgsConstructor
 @Getter
 @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-public class ValidacaoCriarCartaoErroImprocessavel extends RuntimeException {
+public class CartaoImprocessavelErro extends RuntimeException {
 
     private CartaoResponseDto cartaoResponseDto;
 

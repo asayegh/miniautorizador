@@ -2,12 +2,13 @@ package com.vr.miniautorizador.service;
 
 import com.vr.miniautorizador.dto.CartaoRequestDto;
 import com.vr.miniautorizador.dto.CartaoResponseDto;
-import com.vr.miniautorizador.exception.ErroCustomizadoNotFoundResposta;
-import com.vr.miniautorizador.exception.validation.ValidacaoCriarCartaoErroImprocessavel;
+import com.vr.miniautorizador.exception.rule.RecursoNaoEncontradoErro;
+import com.vr.miniautorizador.exception.rule.CartaoImprocessavelErro;
 import com.vr.miniautorizador.model.Cartao;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -25,7 +26,7 @@ public class CartaoService {
     CartaoRepository cartaoRepository;
 
     @Lock(LockModeType.OPTIMISTIC)
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
     public CartaoResponseDto criarCartao(CartaoRequestDto cartaoRequestDto) {
 
             var mapper = new ModelMapper();
@@ -34,12 +35,12 @@ public class CartaoService {
 
             try {
                 cartao = cartaoRepository.save(request);
-            } catch (Exception e) {
+            } catch (DataIntegrityViolationException e) {
                 var cartaoResponseDto = CartaoResponseDto.builder()
                         .numeroCartao(cartaoRequestDto.getNumeroCartao())
                         .senha(cartaoRequestDto.getSenha())
                         .build();
-                throw new ValidacaoCriarCartaoErroImprocessavel(cartaoResponseDto);
+                throw new CartaoImprocessavelErro(cartaoResponseDto);
             }
 
             var response = mapper.map(cartao, CartaoResponseDto.class);
@@ -50,7 +51,7 @@ public class CartaoService {
 
         Optional<Cartao> cartao = cartaoRepository.findByNumeroCartao(numeroCartao);
         cartao.orElseThrow(
-                () -> new ErroCustomizadoNotFoundResposta("Recurso não encontrado")
+                () -> new RecursoNaoEncontradoErro("Recurso não encontrado")
         );
         return cartao.get().getSaldo();
     }

@@ -2,7 +2,7 @@ package com.vr.miniautorizador.service;
 
 import com.vr.miniautorizador.dto.CartaoRequestDto;
 import com.vr.miniautorizador.dto.TransacaoRequestDto;
-import com.vr.miniautorizador.exception.transaction.ErroCustomizadoTransacaoResposta;
+import com.vr.miniautorizador.exception.input.InputErro;
 import com.vr.miniautorizador.model.Cartao;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import com.vr.miniautorizador.repository.TransacaoRepository;
@@ -81,9 +81,9 @@ public class TransacaoServiceTest {
 
         var cartao = mapper.map(cartaoRequestDto, Cartao.class);
 
-        when(cartaoRepository.findByNumeroCartao(cartao.getNumeroCartao())).thenThrow(ErroCustomizadoTransacaoResposta.class);
+        when(cartaoRepository.findByNumeroCartao(cartao.getNumeroCartao())).thenThrow(InputErro.class);
 
-        assertThrows(ErroCustomizadoTransacaoResposta.class,
+        assertThrows(InputErro.class,
                 () -> transacaoService.criarTransacao(transacaoRequestDto));
     }
 }

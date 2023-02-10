@@ -2,8 +2,8 @@ package com.vr.miniautorizador.service;
 
 import com.vr.miniautorizador.dto.TransacaoRequestDto;
 import com.vr.miniautorizador.dto.TransacaoResponseDto;
-import com.vr.miniautorizador.exception.sql.ValidacaoOperacaoSqlExcecao;
-import com.vr.miniautorizador.exception.transaction.ErroCustomizadoTransacaoResposta;
+import com.vr.miniautorizador.exception.sql.OperacaoSqlExcecao;
+import com.vr.miniautorizador.exception.input.InputErro;
 import com.vr.miniautorizador.model.Transacao;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import com.vr.miniautorizador.repository.TransacaoRepository;
@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.LockModeType;
+import javax.persistence.PersistenceException;
 import java.util.Optional;
 
 import static com.vr.miniautorizador.util.Constants.*;
@@ -43,7 +44,7 @@ public class TransacaoService {
     }
 
     @Lock(LockModeType.OPTIMISTIC)
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
     public String criarTransacao(TransacaoRequestDto transacaoRequestDto) {
 
         var numeroCartao = Optional.of(transacaoRequestDto.getNumeroCartao());
@@ -51,7 +52,7 @@ public class TransacaoService {
         var valorTransacaoRequest = Optional.of(transacaoRequestDto.getValor());
 
         var cartao = cartaoRepository.findByNumeroCartao(numeroCartao.get());
-        cartao.orElseThrow(() -> new ErroCustomizadoTransacaoResposta(CARTAO_INEXISTENTE));
+        cartao.orElseThrow(() -> new InputErro(CARTAO_INEXISTENTE));
 
         var comparaSenha = senhaCartao.get().equals(cartao.get().getSenha()) ?
                 SENHA_VALIDA : SENHA_INVALIDA;
@@ -67,14 +68,12 @@ public class TransacaoService {
         var transacao = new Transacao();
         transacao.setCartao(cartao.get());
         transacao.setValorTransacao(valorTransacaoRequest.get());
-
-        cartao.get().setSaldo(cartao.get().getSaldo().subtract(valorTransacaoRequest.get()));
-
         try {
             transacaoRepository.save(transacao);
+            cartao.get().setSaldo(cartao.get().getSaldo().subtract(valorTransacaoRequest.get()));
             cartaoRepository.save(cartao.get());
-        } catch (RuntimeException e) {
-            throw new ValidacaoOperacaoSqlExcecao();
+        } catch (PersistenceException e) {
+            throw new OperacaoSqlExcecao();
         }
 
         return OK;
