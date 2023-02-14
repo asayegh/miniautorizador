@@ -4,6 +4,7 @@ import com.vr.miniautorizador.dto.TransacaoRequestDto;
 import com.vr.miniautorizador.dto.TransacaoResponseDto;
 import com.vr.miniautorizador.exception.input.InputErro;
 import com.vr.miniautorizador.exception.sql.OperacaoSqlExcecao;
+import com.vr.miniautorizador.model.Cartao;
 import com.vr.miniautorizador.model.Transacao;
 import com.vr.miniautorizador.repository.CartaoRepository;
 import com.vr.miniautorizador.repository.TransacaoRepository;
@@ -66,12 +67,13 @@ public class TransacaoService {
         transacaoResponse.setValorTransacao(valorTransacaoRequest.get());
 
         var transacao = new Transacao();
+        cartao.get().setSaldo(cartao.get().getSaldo().subtract(valorTransacaoRequest.get()));
+
         transacao.setCartao(cartao.get());
         transacao.setValorTransacao(valorTransacaoRequest.get());
+
         try {
             transacaoRepository.save(transacao);
-            cartao.get().setSaldo(cartao.get().getSaldo().subtract(valorTransacaoRequest.get()));
-            cartaoRepository.save(cartao.get());
         } catch (PersistenceException e) {
             throw new OperacaoSqlExcecao();
         }
